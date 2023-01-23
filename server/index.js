@@ -15,8 +15,16 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
+    socket.on('join_room', (data) => {
+        socket.join(data);
+    });
+
     socket.on('new_message', (data) => {
-        socket.broadcast.emit('receive_message', data);
+        socket.to(data.room).emit('receive_message', data);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected.', socket.id);
     });
 });
 

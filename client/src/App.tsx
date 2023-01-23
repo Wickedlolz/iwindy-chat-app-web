@@ -1,70 +1,49 @@
-import { FC, useState, useEffect, FormEvent } from 'react';
-import { io } from 'socket.io-client';
+import { useState } from 'react';
+import io, { Socket } from 'socket.io-client';
 
+import Chat from './components/Chat';
 import './App.css';
-const socket = io('http://localhost:5001');
 
-interface IMessageDto {
-    username: string;
-    message: string;
-}
+const socket: Socket = io('http://localhost:5001');
 
-const App: FC = () => {
+function App() {
     const [username, setUsername] = useState<string>('');
-    const [message, setMessage] = useState<string>('');
-    const [chat, setChat] = useState<string>('');
+    const [room, setRoom] = useState<string>('');
+    const [showChat, setShowChat] = useState(false);
 
-    useEffect(() => {
-        socket.on('receive_message', (data: IMessageDto) => {
-            setChat((state) => `${state}${data.username}: ${data.message}\n`);
-        });
-    }, []);
-
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (message.length === 0) return;
-
-        socket.emit('new_message', { username, message });
-        setChat((state) => `${state}${username}: ${message}\n`);
-        setMessage('');
+    const joinRoom = () => {
+        if (username !== '' && room !== '') {
+            socket.emit('join_room', room);
+            setShowChat(true);
+        }
     };
 
     return (
-        <div className="container">
-            <h1 className="title">Welcome to Messenger</h1>
-
-            <textarea
-                className="chat"
-                name="chat"
-                cols={50}
-                rows={10}
-                disabled
-                value={chat}
-            ></textarea>
-
-            <form className="message-form" onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="username"
-                    className="username"
-                    placeholder="Enter your username..."
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                />
-                <textarea
-                    name="message"
-                    className="message"
-                    cols={53}
-                    rows={5}
-                    value={message}
-                    onChange={(event) => setMessage(event.target.value)}
-                    placeholder="Enter your message..."
-                ></textarea>
-                <button className="send-message-btn">Send Message</button>
-            </form>
+        <div className="App">
+            {!showChat ? (
+                <div className="joinChatContainer">
+                    <h3>Join A Chat</h3>
+                    <input
+                        type="text"
+                        placeholder="John..."
+                        onChange={(event) => {
+                            setUsername(event.target.value);
+                        }}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Room ID..."
+                        onChange={(event) => {
+                            setRoom(event.target.value);
+                        }}
+                    />
+                    <button onClick={joinRoom}>Join A Room</button>
+                </div>
+            ) : (
+                <Chat socket={socket} username={username} room={room} />
+            )}
         </div>
     );
-};
+}
 
 export default App;
