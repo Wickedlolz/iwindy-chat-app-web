@@ -5,6 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import AuthGuard from './components/AuthGuard';
 
 const App = () => {
     return (
@@ -13,7 +14,9 @@ const App = () => {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/" element={<Home />} />
+                <Route element={<AuthGuard />}>
+                    <Route path="/" element={<Home />} />
+                </Route>
             </Routes>
         </FirebaseProvider>
     );
