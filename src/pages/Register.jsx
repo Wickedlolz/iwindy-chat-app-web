@@ -1,11 +1,27 @@
-import React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFirebaseContext } from '../contexts/FirebaseContext';
 import styled from 'styled-components';
 
 import AddImage from '../assets/addAvatar.png';
 
 const Register = () => {
-    const handleSubmit = (event) => {
+    const navigate = useNavigate();
+    const { signUp } = useFirebaseContext();
+    const [displayName, setDisplayName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [file, setFile] = useState(null);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
+
+        try {
+            await signUp(displayName, email, password, file);
+            navigate('/', { replace: true });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -14,10 +30,30 @@ const Register = () => {
                 <Logo>iWidy Chat</Logo>
                 <Title>Register</Title>
                 <Form onSubmit={handleSubmit}>
-                    <Input type="text" placeholder="Display Name" />
-                    <Input type="email" placeholder="Email" />
-                    <Input type="password" placeholder="Password" />
-                    <Input type="file" isFile={true} id="file" />
+                    <Input
+                        type="text"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        placeholder="Display Name"
+                    />
+                    <Input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                    />
+                    <Input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                    />
+                    <Input
+                        type="file"
+                        onChange={(e) => setFile(e.target.files[0])}
+                        isFile={true}
+                        id="file"
+                    />
                     <ImageLabel htmlFor="file">
                         <Image src={AddImage} alt="add image" loading="lazy" />
                         <Title>Add an avatar</Title>

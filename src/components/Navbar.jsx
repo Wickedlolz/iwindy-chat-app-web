@@ -1,7 +1,14 @@
 import React from 'react';
+import { useFirebaseContext } from '../contexts/FirebaseContext';
 import { styled } from 'styled-components';
 
 const Navbar = () => {
+    const { logOut } = useFirebaseContext();
+
+    const handleLogout = async () => {
+        await logOut();
+    };
+
     return (
         <Nav>
             <Logo>iWindy Chat</Logo>
@@ -12,7 +19,7 @@ const Navbar = () => {
                     loading="lazy"
                 />
                 <Username>Jenny</Username>
-                <Button>Logout</Button>
+                <Button onClick={handleLogout}>Logout</Button>
             </User>
         </Nav>
     );

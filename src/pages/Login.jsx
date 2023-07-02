@@ -1,15 +1,43 @@
-import React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFirebaseContext } from '../contexts/FirebaseContext';
 import styled from 'styled-components';
 
 const Login = () => {
+    const navigate = useNavigate();
+    const { signIn } = useFirebaseContext();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (email === '' || password === '') {
+            return;
+        }
+
+        await signIn(email, password);
+        navigate('/', { replace: true });
+    };
+
     return (
         <Container>
             <Wrapper>
                 <Logo>iWidy Chat</Logo>
                 <Title>Login</Title>
-                <Form>
-                    <Input type="email" placeholder="Email" />
-                    <Input type="password" placeholder="Password" />
+                <Form onSubmit={handleSubmit}>
+                    <Input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                    />
+                    <Input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                    />
 
                     <Button>Sign In</Button>
                 </Form>
