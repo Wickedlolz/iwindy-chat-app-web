@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { FirebaseProvider } from './contexts/FirebaseContext';
+import { ChatContextProvider } from './contexts/ChatContext';
 import { createGlobalStyle } from 'styled-components';
 
 import Login from './pages/Login';
@@ -10,14 +11,16 @@ import AuthGuard from './components/AuthGuard';
 const App = () => {
     return (
         <FirebaseProvider>
-            <GlobalStyles />
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route element={<AuthGuard />}>
-                    <Route path="/" element={<Home />} />
-                </Route>
-            </Routes>
+            <ChatContextProvider>
+                <GlobalStyles />
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route element={<AuthGuard />}>
+                        <Route path="/" element={<Home />} />
+                    </Route>
+                </Routes>
+            </ChatContextProvider>
         </FirebaseProvider>
     );
 };

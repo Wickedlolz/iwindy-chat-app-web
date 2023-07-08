@@ -1,20 +1,105 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useFirebaseContext } from '../contexts/FirebaseContext';
+import { useChatContext } from '../contexts/ChatContext';
+import {
+    updateDoc,
+    doc,
+    arrayUnion,
+    Timestamp,
+    serverTimestamp,
+} from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { db, storage } from '../firebase-config';
+import { v4 } from 'uuid';
 import { styled } from 'styled-components';
 
 import AddImage from '../assets/img.png';
 import AttachImage from '../assets/attach.png';
 
 const Input = () => {
+    const { currentUser } = useFirebaseContext();
+    const { chat } = useChatContext();
+    const [text, setText] = useState('');
+    const [image, setImage] = useState();
+
+    const handleSend = async () => {
+        if (image) {
+            const storageRef = ref(storage, `/images/${v4()}`);
+            const uploadTask = uploadBytesResumable(storageRef, image);
+            uploadTask.on(
+                (error) => {},
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(
+                        async (downloadUrl) => {
+                            await updateDoc(doc(db, 'chats', chat.chatId), {
+                                messages: arrayUnion({
+                                    id: v4(),
+                                    text,
+                                    senderId: currentUser.uid,
+                                    date: Timestamp.now(),
+                                    image: downloadUrl,
+                                }),
+                            });
+                        }
+                    );
+                }
+            );
+        } else {
+            await updateDoc(doc(db, 'chats', chat.chatId), {
+                messages: arrayUnion({
+                    id: v4(),
+                    text,
+                    senderId: currentUser.uid,
+                    date: Timestamp.now(),
+                }),
+            });
+        }
+
+        await updateDoc(doc(db, 'userChats', currentUser.uid), {
+            [chat.chatId + '.lastMessage']: {
+                text,
+            },
+            [chat.chatId + '.date']: serverTimestamp(),
+        });
+
+        await updateDoc(doc(db, 'userChats', chat.user.uid), {
+            [chat.chatId + '.lastMessage']: {
+                text,
+            },
+            [chat.chatId + '.date']: serverTimestamp(),
+        });
+
+        setText('');
+        setImage(null);
+    };
+
+    const handleEnter = (event) => {
+        if (event.key === 'Enter') {
+            handleSend();
+        }
+    };
+
     return (
         <Container>
-            <InputField type="text" placeholder="Type something..." />
+            <InputField
+                type="text"
+                placeholder="Type something..."
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                onKeyDown={handleEnter}
+            />
             <Send>
                 <Image src={AttachImage} alt="attach image" loading="lazy" />
-                <InputField type="file" id="file" isFile={true} />
+                <InputField
+                    type="file"
+                    id="file"
+                    isFile={true}
+                    onChange={(event) => setImage(event.target.files[0])}
+                />
                 <LabelImage htmlFor="file">
                     <Image src={AddImage} alt="add image" loading="lazy" />
                 </LabelImage>
-                <Button>Send</Button>
+                <Button onClick={handleSend}>Send</Button>
             </Send>
         </Container>
     );

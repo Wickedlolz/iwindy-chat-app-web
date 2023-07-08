@@ -1,25 +1,46 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import { useFirebaseContext } from '../contexts/FirebaseContext';
+import { useChatContext } from '../contexts/ChatContext';
 import { styled } from 'styled-components';
 
-const Message = ({ isOwner }) => {
+const Message = ({ isOwner, message }) => {
+    const { currentUser } = useFirebaseContext();
+    const { chat } = useChatContext();
+    const ref = useRef();
+
+    useEffect(() => {
+        ref.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [message]);
+
     return (
-        <MessageContainer owner={isOwner}>
+        <MessageContainer owner={isOwner} ref={ref}>
             <MessageInfo>
                 <Image
                     isAvatar={true}
-                    src="https://cdn.pixabay.com/photo/2023/05/23/10/45/girl-8012460_1280.jpg"
+                    src={
+                        message?.senderId === currentUser?.uid
+                            ? currentUser.photoURL
+                            : chat.user.photoURL
+                    }
                     alt="user image"
                     loading="lazy"
                 />
-                <Time>Just now</Time>
+                <Time>
+                    {new Date(
+                        message.date.seconds * 1000 +
+                            message.date.nanoseconds / 1e6
+                    ).toLocaleString()}
+                </Time>
             </MessageInfo>
             <MessageContent owner={isOwner}>
-                <MessageText owner={isOwner}>Hello...</MessageText>
-                <Image
-                    src="https://cdn.pixabay.com/photo/2023/05/23/10/45/girl-8012460_1280.jpg"
-                    alt="received image"
-                    loading="lazy"
-                />
+                <MessageText owner={isOwner}>{message?.text}</MessageText>
+                {message?.image && (
+                    <Image
+                        src={message.image}
+                        alt="received image"
+                        loading="lazy"
+                    />
+                )}
             </MessageContent>
         </MessageContainer>
     );
@@ -58,7 +79,11 @@ const Image = styled.img`
     object-fit: cover;
 `;
 
-const Time = styled.span``;
+const Time = styled.p`
+    text-align: center;
+    font-size: 9px;
+    margin-top: 3px;
+`;
 
 const MessageText = styled.p`
     background-color: #fff;

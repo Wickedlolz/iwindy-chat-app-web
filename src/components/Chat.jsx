@@ -1,4 +1,5 @@
 import React from 'react';
+import { useChatContext } from '../contexts/ChatContext';
 import { styled } from 'styled-components';
 
 import Messages from './Messages';
@@ -9,10 +10,12 @@ import AddImage from '../assets/add.png';
 import MoreImage from '../assets/more.png';
 
 const Chat = () => {
+    const { chat } = useChatContext();
+
     return (
         <Container>
             <ChatInfo>
-                <Username>Jenny</Username>
+                <Username>{chat?.user?.displayName}</Username>
                 <ChatIcons>
                     <Image src={CamImage} alt="cam image" loading="lazy" />
                     <Image src={AddImage} alt="add image" loading="lazy" />

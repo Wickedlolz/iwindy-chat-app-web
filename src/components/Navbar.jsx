@@ -3,7 +3,7 @@ import { useFirebaseContext } from '../contexts/FirebaseContext';
 import { styled } from 'styled-components';
 
 const Navbar = () => {
-    const { logOut } = useFirebaseContext();
+    const { currentUser, logOut } = useFirebaseContext();
 
     const handleLogout = async () => {
         await logOut();
@@ -14,11 +14,11 @@ const Navbar = () => {
             <Logo>iWindy Chat</Logo>
             <User>
                 <Image
-                    src="https://cdn.pixabay.com/photo/2023/05/23/10/45/girl-8012460_1280.jpg"
+                    src={currentUser?.photoURL}
                     alt="user avatar"
                     loading="lazy"
                 />
-                <Username>Jenny</Username>
+                <Username>{currentUser?.displayName}</Username>
                 <Button onClick={handleLogout}>Logout</Button>
             </User>
         </Nav>

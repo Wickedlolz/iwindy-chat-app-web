@@ -32,4 +32,8 @@ const Wrapper = styled.div`
     height: 80%;
     display: flex;
     overflow: hidden;
+
+    box-shadow: -1px 0px 3px 3px rgba(0, 0, 0, 0.29);
+    -webkit-box-shadow: -1px 0px 3px 3px rgba(0, 0, 0, 0.29);
+    -moz-box-shadow: -1px 0px 3px 3px rgba(0, 0, 0, 0.29);
 `;

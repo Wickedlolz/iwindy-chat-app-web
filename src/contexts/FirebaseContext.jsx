@@ -16,7 +16,7 @@ import { v4 } from 'uuid';
 export const FirebaseContext = createContext({});
 
 export const FirebaseProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const signUp = async (displayName, email, password, file) => {
@@ -64,7 +64,7 @@ export const FirebaseProvider = ({ children }) => {
     useEffect(() => {
         setIsLoading(true);
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            setCurrentUser(currentUser);
             setIsLoading(false);
         });
 
@@ -74,7 +74,7 @@ export const FirebaseProvider = ({ children }) => {
     return (
         <FirebaseContext.Provider
             value={{
-                user,
+                currentUser,
                 signUp,
                 signIn,
                 signInWithGoogle,

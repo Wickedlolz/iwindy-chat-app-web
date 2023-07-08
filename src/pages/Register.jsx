@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useFirebaseContext } from '../contexts/FirebaseContext';
 import styled from 'styled-components';
 
@@ -60,7 +60,9 @@ const Register = () => {
                     </ImageLabel>
                     <Button>Sign Up</Button>
                 </Form>
-                <LoginLink>You do have an account? Login</LoginLink>
+                <LoginLink>
+                    You do have an account? <Link to="/login">Login</Link>
+                </LoginLink>
             </Wrapper>
         </Container>
     );

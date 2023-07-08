@@ -3,15 +3,15 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useFirebaseContext } from '../contexts/FirebaseContext';
 
 const AuthGuard = ({ children }) => {
-    const { user } = useFirebaseContext();
+    const { currentUser } = useFirebaseContext();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!user) {
+        if (!currentUser) {
             navigate('/login', { replace: true });
             return;
         }
-    }, [user]);
+    }, [currentUser]);
 
     return children ? children : <Outlet />;
 };

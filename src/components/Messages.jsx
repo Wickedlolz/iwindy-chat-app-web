@@ -1,16 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useFirebaseContext } from '../contexts/FirebaseContext';
+import { useChatContext } from '../contexts/ChatContext';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebase-config';
 import { styled } from 'styled-components';
 
 import Message from './Message';
 
 const Messages = () => {
+    const { currentUser } = useFirebaseContext();
+    const { chat } = useChatContext();
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        if (chat?.chatId) {
+            const unsubscribe = onSnapshot(
+                doc(db, 'chats', chat.chatId),
+                (doc) => {
+                    if (doc.exists()) {
+                        setMessages(doc.data().messages);
+                    }
+                }
+            );
+            return () => unsubscribe();
+        }
+    }, [chat?.chatId]);
+
     return (
         <Container>
-            <Message isOwner={true} />
-            <Message isOwner={false} />
-            <Message isOwner={true} />
-            <Message isOwner={false} />
-            <Message isOwner={true} />
+            {messages.map((message) => (
+                <Message
+                    key={message?.id}
+                    isOwner={message?.senderId !== currentUser?.uid}
+                    message={message}
+                />
+            ))}
         </Container>
     );
 };
