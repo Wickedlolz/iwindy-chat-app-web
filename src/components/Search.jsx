@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFirebaseContext } from '../contexts/FirebaseContext';
 import {
     collection,
@@ -16,9 +16,16 @@ import { styled } from 'styled-components';
 
 const Search = () => {
     const { currentUser } = useFirebaseContext();
-    const [username, setUsername] = useState();
+    const [username, setUsername] = useState('');
     const [foundedUser, setFoundedUser] = useState(null);
     const [error, setError] = useState(false);
+
+    useEffect(() => {
+        if (username === '') {
+            setFoundedUser(null);
+            setError(false);
+        }
+    }, [username]);
 
     const handleSearch = async () => {
         const queryString = query(
@@ -28,9 +35,15 @@ const Search = () => {
 
         try {
             const querySnapshot = await getDocs(queryString);
-            querySnapshot.forEach((doc) => {
-                setFoundedUser(doc.data());
-            });
+
+            if (querySnapshot.empty) {
+                setError(true);
+            } else {
+                querySnapshot.forEach((doc) => {
+                    setFoundedUser(doc.data());
+                });
+                setError(false);
+            }
         } catch (error) {
             setError(true);
         }
@@ -66,7 +79,9 @@ const Search = () => {
 
             setFoundedUser(null);
             setUsername('');
-        } catch (error) {}
+        } catch (error) {
+            console.log('error from selected user: ', error);
+        }
     };
 
     const handleEnter = (event) => {

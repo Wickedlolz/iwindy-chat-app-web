@@ -90,10 +90,10 @@ const Input = () => {
             />
             <Send>
                 <Image src={AttachImage} alt="attach image" loading="lazy" />
-                <InputField
+                <InputFile
                     type="file"
                     id="file"
-                    isFile={true}
+                    value={image}
                     onChange={(event) => setImage(event.target.files[0])}
                 />
                 <LabelImage htmlFor="file">
@@ -117,7 +117,19 @@ const Container = styled.div`
 `;
 
 const InputField = styled.input`
-    display: ${(props) => (props.isFile ? 'none' : '')};
+    width: 100%;
+    border: none;
+    outline: none;
+    color: #2f2d52;
+    font-size: 18px;
+
+    &::placeholder {
+        color: lightgray;
+    }
+`;
+
+const InputFile = styled.input`
+    display: none;
     width: 100%;
     border: none;
     outline: none;

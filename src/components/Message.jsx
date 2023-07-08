@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFirebaseContext } from '../contexts/FirebaseContext';
 import { useChatContext } from '../contexts/ChatContext';
 import { styled } from 'styled-components';
@@ -7,10 +7,19 @@ const Message = ({ isOwner, message }) => {
     const { currentUser } = useFirebaseContext();
     const { chat } = useChatContext();
     const ref = useRef();
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     }, [message]);
+
+    const handleImageClick = (image) => {
+        setSelectedImage(image);
+    };
+
+    const handlePreviewClose = () => {
+        setSelectedImage(null);
+    };
 
     return (
         <MessageContainer owner={isOwner} ref={ref}>
@@ -39,7 +48,14 @@ const Message = ({ isOwner, message }) => {
                         src={message.image}
                         alt="received image"
                         loading="lazy"
+                        isImagePreview={true}
+                        onClick={() => handleImageClick(message.image)}
                     />
+                )}
+                {selectedImage && (
+                    <PreviewOverlay onClick={handlePreviewClose}>
+                        <PreviewImage src={selectedImage} />
+                    </PreviewOverlay>
                 )}
             </MessageContent>
         </MessageContainer>
@@ -77,6 +93,7 @@ const Image = styled.img`
     height: ${(props) => (props.isAvatar ? '40px' : '')};
     border-radius: ${(props) => (props.isAvatar ? '50%' : '')};
     object-fit: cover;
+    cursor: ${(props) => (props.isImagePreview ? 'pointer' : '')};
 `;
 
 const Time = styled.p`
@@ -91,4 +108,23 @@ const MessageText = styled.p`
     max-width: max-content;
     border-radius: ${(props) =>
         !props.owner ? '10px 0px 10px 10px' : '0px 10px 10px 10px'};
+`;
+
+const PreviewOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+`;
+
+const PreviewImage = styled.img`
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
 `;
