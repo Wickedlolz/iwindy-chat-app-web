@@ -22,10 +22,9 @@ const Message = ({ isOwner, message }) => {
     };
 
     return (
-        <MessageContainer owner={isOwner} ref={ref}>
+        <MessageContainer $owner={isOwner} ref={ref}>
             <MessageInfo>
-                <Image
-                    isAvatar={true}
+                <UserAvatar
                     src={
                         message?.senderId === currentUser?.uid
                             ? currentUser.photoURL
@@ -41,14 +40,13 @@ const Message = ({ isOwner, message }) => {
                     ).toLocaleString()}
                 </Time>
             </MessageInfo>
-            <MessageContent owner={isOwner}>
-                <MessageText owner={isOwner}>{message?.text}</MessageText>
+            <MessageContent $owner={isOwner}>
+                <MessageText $owner={isOwner}>{message?.text}</MessageText>
                 {message?.image && (
-                    <Image
+                    <ImagePreview
                         src={message.image}
                         alt="received image"
                         loading="lazy"
-                        isImagePreview={true}
                         onClick={() => handleImageClick(message.image)}
                     />
                 )}
@@ -67,7 +65,7 @@ export default Message;
 const MessageContainer = styled.div`
     display: flex;
     gap: 20px;
-    flex-direction: ${(props) => (!props.owner ? 'row-reverse' : 'row')};
+    flex-direction: ${(props) => (!props.$owner ? 'row-reverse' : 'row')};
     margin-bottom: 15px;
 `;
 
@@ -85,15 +83,20 @@ const MessageContent = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    align-items: ${(props) => (!props.owner ? 'flex-end' : '')};
+    align-items: ${(props) => (!props.$owner ? 'flex-end' : '')};
 `;
 
-const Image = styled.img`
-    width: ${(props) => (props.isAvatar ? '40px' : '50%')};
-    height: ${(props) => (props.isAvatar ? '40px' : '')};
-    border-radius: ${(props) => (props.isAvatar ? '50%' : '')};
+const UserAvatar = styled.img`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     object-fit: cover;
-    cursor: ${(props) => (props.isImagePreview ? 'pointer' : '')};
+`;
+
+const ImagePreview = styled.img`
+    width: 50%;
+    object-fit: cover;
+    cursor: pointer;
 `;
 
 const Time = styled.p`
@@ -107,7 +110,7 @@ const MessageText = styled.p`
     padding: 10px 20px;
     max-width: max-content;
     border-radius: ${(props) =>
-        !props.owner ? '10px 0px 10px 10px' : '0px 10px 10px 10px'};
+        !props.$owner ? '10px 0px 10px 10px' : '0px 10px 10px 10px'};
 `;
 
 const PreviewOverlay = styled.div`

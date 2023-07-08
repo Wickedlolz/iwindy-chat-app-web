@@ -45,5 +45,5 @@ const Container = styled.div`
     background-color: #ddddf7;
     padding: 10px;
     height: calc(100% - 100px);
-    overflow: scroll;
+    overflow: auto;
 `;

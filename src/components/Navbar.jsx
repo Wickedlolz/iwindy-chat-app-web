@@ -43,6 +43,7 @@ const Nav = styled.div`
 const Logo = styled.span`
     font-weight: bold;
     font-size: 15px;
+    cursor: default;
 `;
 
 const User = styled.div`
