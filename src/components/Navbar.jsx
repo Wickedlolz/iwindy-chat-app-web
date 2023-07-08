@@ -1,11 +1,14 @@
 import React from 'react';
 import { useFirebaseContext } from '../contexts/FirebaseContext';
+import { useChatContext } from '../contexts/ChatContext';
 import { styled } from 'styled-components';
 
 const Navbar = () => {
     const { currentUser, logOut } = useFirebaseContext();
+    const { dispatch } = useChatContext();
 
     const handleLogout = async () => {
+        dispatch({ type: 'CLEAR_USER' });
         await logOut();
     };
 

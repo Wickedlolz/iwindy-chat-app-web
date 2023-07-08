@@ -20,6 +20,8 @@ export const ChatContextProvider = ({ children }) => {
                             ? currentUser.uid + action.payload.uid
                             : action.payload.uid + currentUser.uid,
                 };
+            case 'CLEAR_USER':
+                return INITIAL_STATE;
             default:
                 return state;
         }
