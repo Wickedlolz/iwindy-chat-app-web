@@ -1,5 +1,5 @@
-# Chat Application
+# iWindy Chat Application
 
 ## Description
 
-Purpose of this application is trying and play around with Firebase
+Simple chat application with React + Vite and Firebase
