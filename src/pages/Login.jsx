@@ -46,6 +46,7 @@ const Login = () => {
                     <Link to="/register">Register</Link>
                 </LoginLink>
             </Wrapper>
+            <Credentials>Made by: Viktor Dimitrov &copy;</Credentials>
         </Container>
     );
 };
@@ -123,4 +124,10 @@ const LoginLink = styled.p`
     color: #5d5d8d;
     font-size: 12px;
     margin-top: 10px;
+`;
+
+const Credentials = styled.p`
+    position: absolute;
+    bottom: 5px;
+    font-size: 14px;
 `;

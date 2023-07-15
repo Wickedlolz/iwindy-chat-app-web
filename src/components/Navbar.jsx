@@ -67,4 +67,10 @@ const Button = styled.button`
     font-size: 10px;
     border: none;
     cursor: pointer;
+    margin-left: 15px;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: #717093;
+    }
 `;

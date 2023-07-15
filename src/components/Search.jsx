@@ -94,7 +94,7 @@ const Search = () => {
         <Container>
             <SearchForm>
                 <Input
-                    placeholder="Find a user.."
+                    placeholder="Find a user..."
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                     onKeyDown={handleEnter}
