@@ -27,7 +27,7 @@ const Register = () => {
     return (
         <Container>
             <Wrapper>
-                <Logo>iWidy Chat</Logo>
+                <Logo>iWindy Chat</Logo>
                 <Title>Register</Title>
                 <Form onSubmit={handleSubmit}>
                     <Input

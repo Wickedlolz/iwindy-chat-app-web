@@ -23,7 +23,7 @@ const Login = () => {
     return (
         <Container>
             <Wrapper>
-                <Logo>iWidy Chat</Logo>
+                <Logo>iWindy Chat</Logo>
                 <Title>Login</Title>
                 <Form onSubmit={handleSubmit}>
                     <Input
