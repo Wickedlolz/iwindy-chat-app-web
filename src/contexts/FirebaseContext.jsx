@@ -58,7 +58,7 @@ export const FirebaseProvider = ({ children }) => {
             await updateProfile(response.user, {
                 displayName,
                 photoURL:
-                    'https://thumbs.dreamstime.com/b/avatar-profile-icon-default-social-media-user-vector-avatar-profile-icon-default-social-media-user-vector-icon-213735007.jpg',
+                    'https://w7.pngwing.com/pngs/722/101/png-transparent-computer-icons-user-profile-circle-abstract-miscellaneous-rim-account.png',
             });
 
             await setDoc(doc(db, 'users', response.user.uid), {
@@ -66,7 +66,7 @@ export const FirebaseProvider = ({ children }) => {
                 displayName,
                 email,
                 photoURL:
-                    'https://thumbs.dreamstime.com/b/avatar-profile-icon-default-social-media-user-vector-avatar-profile-icon-default-social-media-user-vector-icon-213735007.jpg',
+                    'https://w7.pngwing.com/pngs/722/101/png-transparent-computer-icons-user-profile-circle-abstract-miscellaneous-rim-account.png',
             });
 
             await setDoc(doc(db, 'userChats', response.user.uid), {});
