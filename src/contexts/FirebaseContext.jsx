@@ -25,33 +25,52 @@ export const FirebaseProvider = ({ children }) => {
             email,
             password
         );
-        const storageRef = ref(storage, `/images/${displayName + v4()}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        uploadTask.on(
-            (error) => {},
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(
-                    async (downloadUrl) => {
-                        await updateProfile(response.user, {
-                            displayName,
-                            photoURL: downloadUrl,
-                        });
 
-                        await setDoc(doc(db, 'users', response.user.uid), {
-                            uid: response.user.uid,
-                            displayName,
-                            email,
-                            photoURL: downloadUrl,
-                        });
+        if (file) {
+            const storageRef = ref(storage, `/images/${displayName + v4()}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            uploadTask.on(
+                (error) => {},
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(
+                        async (downloadUrl) => {
+                            await updateProfile(response.user, {
+                                displayName,
+                                photoURL: downloadUrl,
+                            });
 
-                        await setDoc(
-                            doc(db, 'userChats', response.user.uid),
-                            {}
-                        );
-                    }
-                );
-            }
-        );
+                            await setDoc(doc(db, 'users', response.user.uid), {
+                                uid: response.user.uid,
+                                displayName,
+                                email,
+                                photoURL: downloadUrl,
+                            });
+
+                            await setDoc(
+                                doc(db, 'userChats', response.user.uid),
+                                {}
+                            );
+                        }
+                    );
+                }
+            );
+        } else {
+            await updateProfile(response.user, {
+                displayName,
+                photoURL:
+                    'https://thumbs.dreamstime.com/b/avatar-profile-icon-default-social-media-user-vector-avatar-profile-icon-default-social-media-user-vector-icon-213735007.jpg',
+            });
+
+            await setDoc(doc(db, 'users', response.user.uid), {
+                uid: response.user.uid,
+                displayName,
+                email,
+                photoURL:
+                    'https://thumbs.dreamstime.com/b/avatar-profile-icon-default-social-media-user-vector-avatar-profile-icon-default-social-media-user-vector-icon-213735007.jpg',
+            });
+
+            await setDoc(doc(db, 'userChats', response.user.uid), {});
+        }
     };
 
     const signIn = (email, password) =>
