@@ -1,25 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFirebaseContext } from '../contexts/FirebaseContext';
 import { useChatContext } from '../contexts/ChatContext';
 import { styled } from 'styled-components';
 
+import ProfileModal from './ProfileModal';
+
 const Navbar = () => {
     const { currentUser, logOut } = useFirebaseContext();
     const { dispatch } = useChatContext();
+    const [openProfile, setOpenProfile] = useState(false);
 
     const handleLogout = async () => {
         dispatch({ type: 'CLEAR_USER' });
         await logOut();
     };
 
+    const handleOpenProfile = () => {
+        setOpenProfile((state) => !state);
+    };
+
     return (
         <Nav>
+            {openProfile && <ProfileModal />}
             <Logo>iWindy Chat</Logo>
             <User>
                 <Image
                     src={currentUser?.photoURL}
                     alt="user avatar"
                     loading="lazy"
+                    onClick={handleOpenProfile}
                 />
                 <Username>{currentUser?.displayName}</Username>
                 <Button onClick={handleLogout}>Logout</Button>
@@ -57,6 +66,7 @@ const Image = styled.img`
     height: 24px;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
 `;
 
 const Username = styled.span``;
