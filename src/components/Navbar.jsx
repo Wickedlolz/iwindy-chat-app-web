@@ -4,7 +4,6 @@ import { useChatContext } from '../contexts/ChatContext';
 import { styled } from 'styled-components';
 
 import ProfileModal from './ProfileModal';
-import EditProfileModal from './EditProfileModal';
 
 const Navbar = () => {
     const { currentUser, logOut } = useFirebaseContext();
