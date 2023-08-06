@@ -28,6 +28,7 @@ const Navbar = () => {
                     src={currentUser?.photoURL}
                     alt="user avatar"
                     loading="lazy"
+                    onClick={handleOpenProfile}
                 />
                 <Username>{currentUser?.displayName}</Username>
                 <Button onClick={handleLogout}>Logout</Button>
