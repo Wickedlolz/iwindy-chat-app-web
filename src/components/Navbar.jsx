@@ -4,6 +4,7 @@ import { useChatContext } from '../contexts/ChatContext';
 import { styled } from 'styled-components';
 
 import ProfileModal from './ProfileModal';
+import EditProfileModal from './EditProfileModal';
 
 const Navbar = () => {
     const { currentUser, logOut } = useFirebaseContext();
@@ -28,7 +29,6 @@ const Navbar = () => {
                     src={currentUser?.photoURL}
                     alt="user avatar"
                     loading="lazy"
-                    onClick={handleOpenProfile}
                 />
                 <Username>{currentUser?.displayName}</Username>
                 <Button onClick={handleLogout}>Logout</Button>

@@ -6,19 +6,16 @@ const ProfileModal = () => {
     const { currentUser } = useFirebaseContext();
 
     return (
-        <>
-            <Triangle />
-            <Container>
-                <Image
-                    src={currentUser?.photoURL}
-                    alt={currentUser?.displayName}
-                    loading="lazy"
-                />
-                <Username>{currentUser?.displayName}</Username>
-                <UserEmail>{currentUser?.email}</UserEmail>
-                <Button>Edit</Button>
-            </Container>
-        </>
+        <Container>
+            <Image
+                src={currentUser?.photoURL}
+                alt={currentUser?.displayName}
+                loading="lazy"
+            />
+            <Username>{currentUser?.displayName}</Username>
+            <UserEmail>{currentUser?.email}</UserEmail>
+            <Button>Edit</Button>
+        </Container>
     );
 };
 
@@ -27,7 +24,7 @@ export default ProfileModal;
 const Container = styled.div`
     position: absolute;
     top: 45px;
-    left: 200px;
+    left: 250px;
     border: 1px solid black;
     border-radius: 8px;
     overflow: hidden;
@@ -81,16 +78,4 @@ const Button = styled.button`
     &:hover {
         background-color: #717093;
     }
-`;
-
-const Triangle = styled.div`
-    position: absolute;
-    top: 36px;
-    left: 246px;
-    z-index: 100;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 10px solid #ddddf7;
 `;
