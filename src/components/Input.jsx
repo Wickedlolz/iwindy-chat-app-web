@@ -93,7 +93,6 @@ const Input = () => {
                 <InputFile
                     type="file"
                     id="file"
-                    value={image}
                     onChange={(event) => setImage(event.target.files[0])}
                 />
                 <LabelImage htmlFor="file">
