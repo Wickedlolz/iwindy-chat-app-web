@@ -145,6 +145,6 @@ const Credentials = styled.p`
 `;
 
 const ErrorFields = styled.span`
-    font-size: 12px;
+    font-size: 10px;
     color: red;
 `;
