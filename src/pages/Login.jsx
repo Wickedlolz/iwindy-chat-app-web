@@ -8,13 +8,20 @@ const Login = () => {
     const { signIn } = useFirebaseContext();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({
+        email: false,
+        password: false,
+    });
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (email === '' || password === '') {
+            setErrors((state) => ({ ...state, email: true, password: true }));
             return;
         }
+
+        setErrors((state) => ({ ...state, email: false, password: false }));
 
         await signIn(email, password);
         navigate('/', { replace: true });
@@ -32,13 +39,18 @@ const Login = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                     />
+                    {errors.email && (
+                        <ErrorFields>Email is required!</ErrorFields>
+                    )}
                     <Input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                     />
-
+                    {errors.password && (
+                        <ErrorFields>Password is required!</ErrorFields>
+                    )}
                     <Button>Sign In</Button>
                 </Form>
                 <LoginLink>
@@ -130,4 +142,9 @@ const Credentials = styled.p`
     position: absolute;
     bottom: 5px;
     font-size: 14px;
+`;
+
+const ErrorFields = styled.span`
+    font-size: 12px;
+    color: red;
 `;
